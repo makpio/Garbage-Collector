@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-
-class AuthenticationForm extends StatefulWidget {
+class AuthForm extends StatefulWidget {
   @override
-  _AuthenticationFormState createState() => _AuthenticationFormState();
+  _AuthFormState createState() => _AuthFormState();
 }
 
-class _AuthenticationFormState extends State<AuthenticationForm> {
+class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
 
   var _isLogin = true;
