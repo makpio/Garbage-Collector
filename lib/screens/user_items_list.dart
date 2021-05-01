@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 import './add_item.dart';
+import '../providers/items.dart';
 
 class UserItemsList extends StatefulWidget {
   static const routeName = '/user-items-list';
@@ -27,8 +29,21 @@ class _UserItemsListState extends State<UserItemsList> {
           ),
         ],
       ),
-      body: Center(
-        child: CircularProgressIndicator(),
+      body: Consumer<Items>(
+        child: Center(
+          child: const Text('You have no items yet'),
+        ),
+        builder: (ctx, items, ch) => items.items.length <= 0
+            ? ch
+            : ListView.builder(
+                itemCount: items.items.length,
+                itemBuilder: (ctx, index) => ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: FileImage(items.items[index].image),
+                      ),
+                      title: Text(items.items[index].name),
+                      onTap: () {},
+                    )),
       ),
     );
   }

@@ -28,7 +28,7 @@ dependencies:
   cloud_firestore: ^1.0.3
   provider: ^5.0.0
   image_picker: ^0.7.4
-
+  path_provider: ^2.0.1
 
 
 
