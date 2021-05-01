@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
   @override
@@ -7,7 +8,23 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-  File _storedImage;
+  File _image;
+  final picker = ImagePicker();
+
+  Future<void> _getImage() async {
+    final imageFile = await picker.getImage(
+      source: ImageSource.camera,
+      maxWidth: 600,
+    );
+
+    setState(() {
+      if (imageFile != null) {
+        _image = File(imageFile.path);
+      } else {
+        print('No image selected');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +36,14 @@ class _ImageInputState extends State<ImageInput> {
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Colors.black12),
           ),
-          child: _storedImage != null
+          child: _image != null
               ? Image.file(
-                  _storedImage,
+                  _image,
                   fit: BoxFit.cover,
                   width: double.infinity,
                 )
               : Text(
-                  'No Image Choosen',
+                  'No image selected',
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -38,10 +55,11 @@ class _ImageInputState extends State<ImageInput> {
         ),
         Expanded(
           child: TextButton.icon(
-              icon: Icon(Icons.photo),
-              label: Text('Choose Picture'),
-              onPressed: () {}),
-        )
+            icon: Icon(Icons.photo),
+            label: Text('Take Picture'),
+            onPressed: _getImage,
+          ),
+        ),
       ],
     );
   }
