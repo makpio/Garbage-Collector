@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:garbage_collector/screens/user_items_list.dart';
 
 import 'package:garbage_collector/widgets/auth_form.dart';
 
-
 class Authenticate extends StatefulWidget {
-
+  static const routeName = '/login';
   @override
   _AuthenticateState createState() => _AuthenticateState();
 }
@@ -15,17 +15,10 @@ class Authenticate extends StatefulWidget {
 class _AuthenticateState extends State<Authenticate> {
   final _auth = FirebaseAuth.instance;
   var _isLoading = false;
-  void _submitAuthForm(
-    String email, 
-    String password, 
-    String username, 
-    bool isLogin,
-    BuildContext ctx
-    ) async {
+  void _submitAuthForm(String email, String password, String username,
+      bool isLogin, BuildContext ctx) async {
     UserCredential userCredential;
 
-
-  
     try {
       setState(() {
         _isLoading = true;
@@ -33,42 +26,44 @@ class _AuthenticateState extends State<Authenticate> {
 
       if (isLogin) {
         userCredential = await _auth.signInWithEmailAndPassword(
-          email: email, 
-          password: password
-        );
-      }
-      else {
+            email: email, password: password);
+      } else {
         userCredential = await _auth.createUserWithEmailAndPassword(
-          email: email, 
-          password: password
-        );
-        await FirebaseFirestore.instance.collection('users').doc(userCredential.user.uid).set({
-          'username':username, 
-          'email':email,});
+            email: email, password: password);
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user.uid)
+            .set({
+          'username': username,
+          'email': email,
+        });
       }
-      
+
       setState(() {
         _isLoading = false;
       });
-    } catch (err) {
 
+      Navigator.pushReplacement(context,
+          new MaterialPageRoute(builder: (context) => new UserItemsList()));
+    } catch (err) {
       var message = 'An error occured. Please check your credentials!';
 
-      if (err.message !=null) {
+      if (err.message != null) {
         message = err.message;
       }
 
       ScaffoldMessenger.of(ctx).showSnackBar(
         SnackBar(
           content: Text(message),
-          backgroundColor: Theme.of(ctx).errorColor, 
+          backgroundColor: Theme.of(ctx).errorColor,
         ),
-      ); 
+      );
       setState(() {
         _isLoading = false;
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
