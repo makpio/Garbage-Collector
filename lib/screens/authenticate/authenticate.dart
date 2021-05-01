@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
 import 'package:garbage_collector/widgets/auth_form.dart';
@@ -13,7 +14,7 @@ class Authenticate extends StatefulWidget {
 
 class _AuthenticateState extends State<Authenticate> {
   final _auth = FirebaseAuth.instance;
-
+  var _isLoading = false;
   void _submitAuthForm(
     String email, 
     String password, 
@@ -22,7 +23,14 @@ class _AuthenticateState extends State<Authenticate> {
     BuildContext ctx
     ) async {
     UserCredential userCredential;
+
+
+  
     try {
+      setState(() {
+        _isLoading = true;
+      });
+
       if (isLogin) {
         userCredential = await _auth.signInWithEmailAndPassword(
           email: email, 
@@ -34,7 +42,14 @@ class _AuthenticateState extends State<Authenticate> {
           email: email, 
           password: password
         );
+        await FirebaseFirestore.instance.collection('users').doc(userCredential.user.uid).set({
+          'username':username, 
+          'email':email,});
       }
+      
+      setState(() {
+        _isLoading = false;
+      });
     } catch (err) {
 
       var message = 'An error occured. Please check your credentials!';
@@ -48,14 +63,20 @@ class _AuthenticateState extends State<Authenticate> {
           content: Text(message),
           backgroundColor: Theme.of(ctx).errorColor, 
         ),
-      );
+      ); 
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: AuthForm(_submitAuthForm,),
+      body: AuthForm(
+        _submitAuthForm,
+        _isLoading,
+      ),
     );
   }
 }
