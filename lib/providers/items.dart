@@ -11,14 +11,11 @@ class Items with ChangeNotifier {
   }
 
   void addItem(
+    String id,
     String name,
     File image,
   ) {
-    final newItem = Item(
-        id: DateTime.now().toString(),
-        image: image,
-        name: name,
-        location: null);
+    final newItem = Item(id: id, image: image, name: name, location: null);
     _items.add(newItem);
     notifyListeners();
   }

@@ -1,8 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import '../widgets/image_input.dart';
+import 'package:path/path.dart' as path;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../providers/items.dart';
 
@@ -21,13 +26,36 @@ class _AddItemState extends State<AddItem> {
     _selectedImage = selectedImage;
   }
 
-  void _saveitem() {
+  void _saveitem() async {
     if (_nameController.text.isEmpty || _selectedImage == null) {
       return;
     }
-    Provider.of<Items>(context, listen: false)
-        .addItem(_nameController.text, _selectedImage);
-    Navigator.of(context).pop();
+    try {
+      String fileName = path.basename(_selectedImage.path);
+      firebase_storage.Reference firebaseStorageRef = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('uploads/$fileName');
+      firebase_storage.UploadTask uploadTask =
+          firebaseStorageRef.putFile(_selectedImage);
+      firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadUrl = (await taskSnapshot.ref.getDownloadURL()).toString();
+      DocumentReference docRef =
+          await FirebaseFirestore.instance.collection('items').add({
+        'name': _nameController.text,
+        'imageUrl': downloadUrl,
+      });
+
+      Provider.of<Items>(context, listen: false)
+          .addItem(docRef.id, _nameController.text, _selectedImage);
+      Navigator.of(context).pop();
+    } catch (err) {
+      var message = 'An error occured during adding new item';
+
+      if (err.message != null) {
+        message = err.message;
+      }
+    }
   }
 
   @override
