@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_collector/screens/authenticate/authenticate.dart';
+import 'package:garbage_collector/screens/map_screen.dart';
 import 'package:provider/provider.dart';
 
 import './providers/items.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           Authenticate.routeName: (_) => Authenticate(),
           UserItemsList.routeName: (_) => UserItemsList(),
           AddItem.routeName: (_) => AddItem(),
+          MapScreen.routeName: (_) => MapScreen(),
         },
       ),
     );

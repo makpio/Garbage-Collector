@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:garbage_collector/widgets/location_input.dart';
 import 'package:provider/provider.dart';
 import '../widgets/image_input.dart';
 import 'package:path/path.dart' as path;
+import 'package:latlong/latlong.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,9 +24,14 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   final _nameController = TextEditingController();
   File _selectedImage;
+  LatLng _selectedLocation;
 
   void _selectImage(File selectedImage) {
     _selectedImage = selectedImage;
+  }
+
+  void _selectLocation(LatLng selectedLocation) {
+    _selectedLocation = selectedLocation;
   }
 
   void _saveitem() async {
@@ -46,10 +53,13 @@ class _AddItemState extends State<AddItem> {
         'user': FirebaseAuth.instance.currentUser.uid,
         'name': _nameController.text,
         'imageUrl': downloadUrl,
+        'location.lat': _selectedLocation.latitude,
+        'location.lng': _selectedLocation.longitude,
       });
-
+      //temporary part, for local
       Provider.of<Items>(context, listen: false)
           .addItem(docRef.id, _nameController.text, _selectedImage);
+
       Navigator.of(context).pop();
     } catch (err) {
       var message = 'An error occured during adding new item';
@@ -83,6 +93,10 @@ class _AddItemState extends State<AddItem> {
                     height: 10,
                   ),
                   ImageInput(_selectImage),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  LocationInput(_selectLocation),
                 ],
               ),
             ),

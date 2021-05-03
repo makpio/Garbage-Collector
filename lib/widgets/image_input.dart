@@ -69,7 +69,10 @@ class _ImageInputState extends State<ImageInput> {
         Expanded(
           child: TextButton.icon(
             icon: Icon(Icons.photo),
-            label: Text('Take Picture'),
+            label: Text(
+              'Take Picture',
+              textAlign: TextAlign.center,
+            ),
             onPressed: _getImage,
           ),
         ),
