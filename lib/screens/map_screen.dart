@@ -66,8 +66,8 @@ class _MapScreenState extends State<MapScreen> {
                 ],
               )),
               ElevatedButton.icon(
-                  icon: Icon(Icons.add),
-                  label: Text('Choose Location'),
+                  icon: Icon(Icons.check),
+                  label: Text('Select Location'),
                   onPressed: _saveLocation,
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red,

@@ -149,7 +149,7 @@ class _LocationInputState extends State<LocationInput> {
               child: TextButton.icon(
                 icon: Icon(Icons.map),
                 label: Text(
-                  'Choose Location',
+                  'Select Location',
                   textAlign: TextAlign.center,
                 ),
                 onPressed: _selectLocation,
