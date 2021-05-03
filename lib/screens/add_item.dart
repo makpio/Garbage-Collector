@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../widgets/image_input.dart';
 import 'package:path/path.dart' as path;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -42,6 +43,7 @@ class _AddItemState extends State<AddItem> {
       String downloadUrl = (await taskSnapshot.ref.getDownloadURL()).toString();
       DocumentReference docRef =
           await FirebaseFirestore.instance.collection('items').add({
+        'user': FirebaseAuth.instance.currentUser.uid,
         'name': _nameController.text,
         'imageUrl': downloadUrl,
       });
