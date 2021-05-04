@@ -23,8 +23,8 @@ class _UserItemsListState extends State<UserItemsList> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
             },
           ),
         ],

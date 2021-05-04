@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:garbage_collector/screens/user_items_list.dart';
 
 import 'package:garbage_collector/widgets/auth_form.dart';
 
@@ -42,8 +41,8 @@ class _AuthenticateState extends State<Authenticate> {
         _isLoading = false;
       });
 
-      Navigator.pushReplacement(context,
-          new MaterialPageRoute(builder: (context) => new UserItemsList()));
+      // Navigator.pushReplacement(context,
+      //     new MaterialPageRoute(builder: (context) => new UserItemsList()));
     } catch (err) {
       var message = 'An error occured. Please check your credentials!';
 
