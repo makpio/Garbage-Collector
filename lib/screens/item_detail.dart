@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import '../models/item.dart';
+import 'package:latlong/latlong.dart';
 
 class ItemDetail extends StatelessWidget {
-  final Item item;
+  final item;
 
   ItemDetail({Key key, @required this.item}) : super(key: key);
 
@@ -13,7 +13,7 @@ class ItemDetail extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          item.name,
+          item['name'],
           textAlign: TextAlign.center,
         ),
       ),
@@ -30,9 +30,9 @@ class ItemDetail extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(width: 5, color: Colors.white),
                     ),
-                    child: item.image != null
-                        ? Image.file(
-                            item.image,
+                    child: item['imageUrl'] != null
+                        ? Image.network(
+                            item['imageUrl'],
                             fit: BoxFit.cover,
                             width: double.infinity,
                           )
@@ -113,10 +113,11 @@ class ItemDetail extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(width: 5, color: Colors.white),
                     ),
-                    child: item.image != null
+                    child: item['location.lng'] != null
                         ? FlutterMap(
                             options: new MapOptions(
-                              center: item.location,
+                              center: new LatLng(
+                                  item['location.lat'], item['location.lng']),
                               zoom: 13.0,
                               maxZoom: 18,
                               minZoom: 4,
@@ -132,7 +133,8 @@ class ItemDetail extends StatelessWidget {
                                   new Marker(
                                     width: 40.0,
                                     height: 40.0,
-                                    point: item.location,
+                                    point: new LatLng(item['location.lat'],
+                                        item['location.lng']),
                                     builder: (ctx) => new Container(
                                       child: Icon(
                                         Icons.room,

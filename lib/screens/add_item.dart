@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garbage_collector/widgets/location_input.dart';
-import 'package:provider/provider.dart';
 import '../widgets/image_input.dart';
 import 'package:path/path.dart' as path;
 import 'package:latlong/latlong.dart';
@@ -10,8 +9,6 @@ import 'package:latlong/latlong.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
-import '../providers/items.dart';
 
 class AddItem extends StatefulWidget {
   static const routeName = '/add-item';
@@ -57,10 +54,6 @@ class _AddItemState extends State<AddItem> {
         'location.lng': _selectedLocation.longitude,
       });
 
-      //temporary part, for local
-      Provider.of<Items>(context, listen: false).addItem(
-          docRef.id, _nameController.text, _selectedImage, _selectedLocation);
-
       Navigator.of(context).pop();
     } catch (err) {
       var message = 'An error occured during adding new item';
@@ -68,6 +61,13 @@ class _AddItemState extends State<AddItem> {
       if (err.message != null) {
         message = err.message;
       }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
     }
   }
 
