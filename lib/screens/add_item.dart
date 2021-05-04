@@ -23,6 +23,7 @@ class AddItem extends StatefulWidget {
 
 class _AddItemState extends State<AddItem> {
   final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
   File _selectedImage;
   LatLng _selectedLocation;
 
@@ -56,6 +57,9 @@ class _AddItemState extends State<AddItem> {
         'location.lat': _selectedLocation.latitude,
         'location.lng': _selectedLocation.longitude,
       });
+
+      print('xd');
+      print(_selectedLocation);
       //temporary part, for local
       Provider.of<Items>(context, listen: false).addItem(
           docRef.id, _nameController.text, _selectedImage, _selectedLocation);
@@ -85,14 +89,33 @@ class _AddItemState extends State<AddItem> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Name'),
+                  TextFormField(
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      hintText: "Item Name",
+                      hintStyle: TextStyle(fontSize: 14),
+                      border: OutlineInputBorder(), // <-- This is the key
+                      labelText: "Item Name",
+                    ),
                     controller: _nameController,
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   ImageInput(_selectImage),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      hintText: "Description",
+                      hintStyle: TextStyle(fontSize: 14),
+                      border: OutlineInputBorder(), // <-- This is the key
+                      labelText: "Description",
+                    ),
+                    controller: _descriptionController,
+                  ),
                   SizedBox(
                     height: 10,
                   ),

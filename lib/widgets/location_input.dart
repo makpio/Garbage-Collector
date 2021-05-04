@@ -63,6 +63,9 @@ class _LocationInputState extends State<LocationInput> {
       _location = LatLng(_locationData.latitude, _locationData.longitude);
       controller.move(_location, 15);
     });
+    print(_location.latitude);
+
+    
     widget.onSelectLocation(_location);
   }
 
@@ -71,66 +74,67 @@ class _LocationInputState extends State<LocationInput> {
     return Column(
       children: <Widget>[
         Container(
-            height: 200,
-            width: double.infinity,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.black12),
-            ),
-            child: _location == null
-                ? FlutterMap(
-                    mapController: controller,
-                    options: new MapOptions(
-                      center: new LatLng(52, 19),
-                      zoom: 5.0,
-                      maxZoom: 18,
-                      minZoom: 4,
-                      interactive: false,
-                    ),
-                    layers: [
-                      new TileLayerOptions(
-                          urlTemplate:
-                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                          subdomains: ['a', 'b', 'c']),
-                    ],
-                  )
-                // Text(
-                //     'No location selected',
-                //     textAlign: TextAlign.center,
-                //     overflow: TextOverflow.ellipsis,
-                //     style: TextStyle(fontWeight: FontWeight.bold),
-                //   )
-                : FlutterMap(
-                    mapController: controller,
-                    options: new MapOptions(
-                      center: _location,
-                      zoom: 13.0,
-                      maxZoom: 18,
-                      minZoom: 4,
-                      interactive: false,
-                    ),
-                    layers: [
-                      new TileLayerOptions(
-                          urlTemplate:
-                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                          subdomains: ['a', 'b', 'c']),
-                      new MarkerLayerOptions(
-                        markers: [
-                          new Marker(
-                            width: 40.0,
-                            height: 40.0,
-                            point: _location,
-                            builder: (ctx) => new Container(
-                              child: Icon(
-                                Icons.room,
-                                color: Colors.red,
-                              ),
+          height: 200,
+          width: double.infinity,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.black12),
+          ),
+          child: _location == null
+              ? FlutterMap(
+                  mapController: controller,
+                  options: new MapOptions(
+                    center: new LatLng(52, 19),
+                    zoom: 5.0,
+                    maxZoom: 18,
+                    minZoom: 4,
+                    interactive: false,
+                  ),
+                  layers: [
+                    new TileLayerOptions(
+                        urlTemplate:
+                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        subdomains: ['a', 'b', 'c']),
+                  ],
+                )
+              // Text(
+              //     'No location selected',
+              //     textAlign: TextAlign.center,
+              //     overflow: TextOverflow.ellipsis,
+              //     style: TextStyle(fontWeight: FontWeight.bold),
+              //   )
+              : FlutterMap(
+                  mapController: controller,
+                  options: new MapOptions(
+                    center: _location,
+                    zoom: 13.0,
+                    maxZoom: 18,
+                    minZoom: 4,
+                    interactive: false,
+                  ),
+                  layers: [
+                    new TileLayerOptions(
+                        urlTemplate:
+                            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        subdomains: ['a', 'b', 'c']),
+                    new MarkerLayerOptions(
+                      markers: [
+                        new Marker(
+                          width: 40.0,
+                          height: 40.0,
+                          point: _location,
+                          builder: (ctx) => new Container(
+                            child: Icon(
+                              Icons.room,
+                              color: Colors.red,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
-                  )),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
