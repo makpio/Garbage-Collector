@@ -32,30 +32,32 @@ class _UserItemsListState extends State<UserItemsList> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Consumer<Items>(
-            child: Center(
-              child: const Text('You have no items yet'),
+          Expanded(
+            child: Consumer<Items>(
+              child: Center(
+                child: const Text('You have no items yet'),
+              ),
+              builder: (ctx, items, ch) => items.items.length <= 0
+                  ? ch
+                  : ListView.builder(
+                      itemCount: items.items.length,
+                      itemBuilder: (ctx, index) => ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  FileImage(items.items[index].image),
+                            ),
+                            title: Text(items.items[index].name),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ItemDetail(
+                                      item: items.items[index],
+                                    ),
+                                  ));
+                            },
+                          )),
             ),
-            builder: (ctx, items, ch) => items.items.length <= 0
-                ? ch
-                : ListView.builder(
-                    itemCount: items.items.length,
-                    itemBuilder: (ctx, index) => ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                FileImage(items.items[index].image),
-                          ),
-                          title: Text(items.items[index].name),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ItemDetail(
-                                    item: items.items[index],
-                                  ),
-                                ));
-                          },
-                        )),
           ),
           ElevatedButton.icon(
             icon: Icon(Icons.add),

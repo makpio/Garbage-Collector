@@ -57,8 +57,6 @@ class _AddItemState extends State<AddItem> {
         'location.lng': _selectedLocation.longitude,
       });
 
-      print('xd');
-      print(_selectedLocation);
       //temporary part, for local
       Provider.of<Items>(context, listen: false).addItem(
           docRef.id, _nameController.text, _selectedImage, _selectedLocation);
