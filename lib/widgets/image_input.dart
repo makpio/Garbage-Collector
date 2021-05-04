@@ -17,13 +17,25 @@ class _ImageInputState extends State<ImageInput> {
   File _image;
   final picker = ImagePicker();
 
+  Future<void> _selectImage() async {
+    final imageFile = await picker.getImage(
+      source: ImageSource.gallery,
+      maxWidth: 500,
+      maxHeight: 700,
+    );
+    _saveImage(imageFile);
+  }
+
   Future<void> _getImage() async {
     final imageFile = await picker.getImage(
       source: ImageSource.camera,
       maxWidth: 500,
       maxHeight: 700,
     );
+    _saveImage(imageFile);
+  }
 
+  Future<void> _saveImage(PickedFile imageFile) async {
     setState(() {
       if (imageFile != null) {
         _image = File(imageFile.path);
@@ -31,7 +43,6 @@ class _ImageInputState extends State<ImageInput> {
         print('No image selected');
       }
     });
-
     final appDirectory = await getApplicationDocumentsDirectory();
     final fileName = basename(imageFile.path);
     final savedImage =
@@ -68,15 +79,42 @@ class _ImageInputState extends State<ImageInput> {
           width: 10,
         ),
         Expanded(
-          child: TextButton.icon(
-            icon: Icon(Icons.photo),
-            label: Text(
-              'Take Picture',
-              textAlign: TextAlign.center,
-            ),
-            onPressed: _getImage,
+          child: Column(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  TextButton.icon(
+                    icon: Icon(Icons.camera_alt),
+                    label: Text(
+                      'Take Picture',
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: _getImage,
+                  ),
+                  TextButton.icon(
+                    icon: Icon(Icons.photo),
+                    label: Text(
+                      'Select Picture',
+                      textAlign: TextAlign.center,
+                    ),
+                    onPressed: _selectImage,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
+
+        // Expanded(
+        //   child: TextButton.icon(
+        //     icon: Icon(Icons.photo),
+        //     label: Text(
+        //       'Take Picture',
+        //       textAlign: TextAlign.center,
+        //     ),
+        //     onPressed: _getImage,
+        //   ),
+        // ),
       ],
     );
   }
