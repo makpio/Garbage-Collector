@@ -57,8 +57,8 @@ class _AddItemState extends State<AddItem> {
         'location.lng': _selectedLocation.longitude,
       });
       //temporary part, for local
-      Provider.of<Items>(context, listen: false)
-          .addItem(docRef.id, _nameController.text, _selectedImage);
+      Provider.of<Items>(context, listen: false).addItem(
+          docRef.id, _nameController.text, _selectedImage, _selectedLocation);
 
       Navigator.of(context).pop();
     } catch (err) {
