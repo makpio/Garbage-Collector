@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:garbage_collector/screens/item_detail.dart';
 import 'package:provider/provider.dart';
 
 import './add_item.dart';
@@ -42,7 +43,15 @@ class _UserItemsListState extends State<UserItemsList> {
                         backgroundImage: FileImage(items.items[index].image),
                       ),
                       title: Text(items.items[index].name),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ItemDetail(
+                                item: items.items[index],
+                              ),
+                            ));
+                      },
                     )),
       ),
     );
