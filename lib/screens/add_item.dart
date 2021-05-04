@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garbage_collector/widgets/location_input.dart';
 import 'package:provider/provider.dart';
@@ -133,7 +132,7 @@ class _AddItemState extends State<AddItem> {
               elevation: 10,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-          )
+          ),
         ],
       ),
     );
