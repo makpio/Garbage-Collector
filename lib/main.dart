@@ -5,7 +5,7 @@ import 'package:garbage_collector/screens/auth_screen.dart';
 import 'package:garbage_collector/screens/map_screen.dart';
 
 import 'screens/my_items_screen.dart';
-import './screens/wrapper.dart';
+import 'wrapper.dart';
 import 'screens/add_item_screen.dart';
 
 void main() async {
