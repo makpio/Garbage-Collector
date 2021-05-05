@@ -39,8 +39,6 @@ class _ImageInputState extends State<ImageInput> {
     setState(() {
       if (imageFile != null) {
         _image = File(imageFile.path);
-      } else {
-        print('No image selected');
       }
     });
     final appDirectory = await getApplicationDocumentsDirectory();
@@ -56,8 +54,8 @@ class _ImageInputState extends State<ImageInput> {
     return Row(
       children: <Widget>[
         Container(
-          width: 100,
-          height: 100,
+          width: 200,
+          height: 200,
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Colors.black12),
           ),

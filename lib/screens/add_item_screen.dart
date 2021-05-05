@@ -10,14 +10,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class AddItem extends StatefulWidget {
+class AddItemScreen extends StatefulWidget {
   static const routeName = '/add-item';
 
   @override
-  _AddItemState createState() => _AddItemState();
+  _AddItemScreenState createState() => _AddItemScreenState();
 }
 
-class _AddItemState extends State<AddItem> {
+class _AddItemScreenState extends State<AddItemScreen> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   File _selectedImage;

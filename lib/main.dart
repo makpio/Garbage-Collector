@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:garbage_collector/screens/authenticate/authenticate.dart';
+import 'package:garbage_collector/screens/auth_screen.dart';
 import 'package:garbage_collector/screens/map_screen.dart';
 
-import './screens/user_items_list.dart';
+import 'screens/my_items_screen.dart';
 import './screens/wrapper.dart';
-import './screens/add_item.dart';
+import 'screens/add_item_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
       ),
       home: Wrapper(),
       routes: {
-        Authenticate.routeName: (_) => Authenticate(),
-        UserItemsList.routeName: (_) => UserItemsList(),
-        AddItem.routeName: (_) => AddItem(),
+        AuthScreen.routeName: (_) => AuthScreen(),
+        MyItemsScreen.routeName: (_) => MyItemsScreen(),
+        AddItemScreen.routeName: (_) => AddItemScreen(),
         MapScreen.routeName: (_) => MapScreen(),
       },
     );

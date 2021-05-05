@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:garbage_collector/widgets/auth_form.dart';
 
-class Authenticate extends StatefulWidget {
+class AuthScreen extends StatefulWidget {
   static const routeName = '/login';
   @override
-  _AuthenticateState createState() => _AuthenticateState();
+  _AuthScreenState createState() => _AuthScreenState();
 }
 
-class _AuthenticateState extends State<Authenticate> {
+class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
   var _isLoading = false;
   void _submitAuthForm(String email, String password, String username,

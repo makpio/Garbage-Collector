@@ -1,25 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:garbage_collector/screens/item_detail.dart';
+import 'package:garbage_collector/screens/item_detail_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import './add_item.dart';
+import 'add_item_screen.dart';
 
-class UserItemsList extends StatefulWidget {
+class MyItemsScreen extends StatefulWidget {
   static const routeName = '/user-items-list';
 
   @override
-  _UserItemsListState createState() => _UserItemsListState();
+  _MyItemsScreenState createState() => _MyItemsScreenState();
 }
 
-class _UserItemsListState extends State<UserItemsList> {
+class _MyItemsScreenState extends State<MyItemsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Item'),
+        title: Text('My Items'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.logout),
@@ -42,7 +42,20 @@ class _UserItemsListState extends State<UserItemsList> {
                       .snapshots(),
                   builder: (ctx, snapshot) {
                     if (snapshot.data == null)
-                      return CircularProgressIndicator();
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Center(
+                            child: Container(
+                              height: 100,
+                              width: 100,
+                              margin: EdgeInsets.all(5),
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        ],
+                      );
                     return ListView.builder(
                         itemCount: snapshot.data.docs.length,
                         itemBuilder: (ctx, index) => ListTile(
@@ -56,7 +69,7 @@ class _UserItemsListState extends State<UserItemsList> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ItemDetail(
+                                      builder: (context) => ItemDetailScreen(
                                         item: snapshot.data.docs[index].data(),
                                       ),
                                     ));
@@ -67,7 +80,7 @@ class _UserItemsListState extends State<UserItemsList> {
             icon: Icon(Icons.add),
             label: Text('Add New Item'),
             onPressed: () {
-              Navigator.of(context).pushNamed(AddItem.routeName);
+              Navigator.of(context).pushNamed(AddItemScreen.routeName);
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.red,

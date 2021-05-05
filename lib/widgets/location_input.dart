@@ -25,12 +25,11 @@ class _LocationInputState extends State<LocationInput> {
         await Navigator.of(context).pushNamed(MapScreen.routeName);
 
     _location = selectedLocation;
-    print(_location.latitude);
+
     setState(() {
       _location = selectedLocation;
       controller.move(selectedLocation, 15);
     });
-
     widget.onSelectLocation(_location);
   }
 
@@ -39,7 +38,6 @@ class _LocationInputState extends State<LocationInput> {
 
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
-    // LocationData _locationData;
 
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -63,9 +61,6 @@ class _LocationInputState extends State<LocationInput> {
       _location = LatLng(_locationData.latitude, _locationData.longitude);
       controller.move(_location, 15);
     });
-    print(_location.latitude);
-
-    
     widget.onSelectLocation(_location);
   }
 

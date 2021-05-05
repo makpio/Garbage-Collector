@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
-class ItemDetail extends StatelessWidget {
+class ItemDetailScreen extends StatelessWidget {
   final item;
 
-  ItemDetail({Key key, @required this.item}) : super(key: key);
+  ItemDetailScreen({Key key, @required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
