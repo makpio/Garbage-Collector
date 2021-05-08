@@ -8,7 +8,7 @@ import 'package:latlong/latlong.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AddItemScreen extends StatefulWidget {
   static const routeName = '/add-item';
@@ -37,13 +37,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
     }
     try {
       String fileName = path.basename(_selectedImage.path);
-      firebase_storage.Reference firebaseStorageRef = firebase_storage
-          .FirebaseStorage.instance
-          .ref()
-          .child('uploads/$fileName');
-      firebase_storage.UploadTask uploadTask =
-          firebaseStorageRef.putFile(_selectedImage);
-      firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+      Reference firebaseStorageRef =
+          FirebaseStorage.instance.ref().child('uploads/$fileName');
+      UploadTask uploadTask = firebaseStorageRef.putFile(_selectedImage);
+      TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = (await taskSnapshot.ref.getDownloadURL()).toString();
       DocumentReference docRef =
           await FirebaseFirestore.instance.collection('items').add({
@@ -87,7 +84,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 24),
                     decoration: InputDecoration(
                       hintText: "Item Name",
                       hintStyle: TextStyle(fontSize: 14),
@@ -99,16 +96,19 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  ImageInput(_selectImage),
+                  ImageInput(_selectImage, null),
                   SizedBox(
                     height: 10,
                   ),
                   TextFormField(
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 16),
+                    minLines: 1,
+                    maxLines: 4,
+                    keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       hintText: "Description",
                       hintStyle: TextStyle(fontSize: 14),
-                      border: OutlineInputBorder(), // <-- This is the key
+                      border: OutlineInputBorder(),
                       labelText: "Description",
                     ),
                     controller: _descriptionController,
@@ -116,7 +116,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  LocationInput(_selectLocation),
+                  LocationInput(_selectLocation, null),
                 ],
               ),
             ),

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garbage_collector/screens/auth_screen.dart';
+import 'package:garbage_collector/screens/edit_item_screen.dart';
 import 'package:garbage_collector/screens/map_screen.dart';
 
 import 'screens/my_items_screen.dart';

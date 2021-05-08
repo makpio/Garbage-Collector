@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
+
+import 'edit_item_screen.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final item;
@@ -16,6 +19,23 @@ class ItemDetailScreen extends StatelessWidget {
           item['name'],
           textAlign: TextAlign.center,
         ),
+        actions: FirebaseAuth.instance.currentUser.uid == item['user']
+            ? <Widget>[
+                IconButton(
+                  icon: Icon(Icons.edit_outlined),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditItemScreen(
+                          item: item,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ]
+            : null,
       ),
       body: Column(
         children: <Widget>[

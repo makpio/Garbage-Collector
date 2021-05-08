@@ -19,7 +19,11 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Items'),
+        centerTitle: true,
+        title: Text(
+          'My Items',
+          textAlign: TextAlign.center,
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.logout),
@@ -59,20 +63,30 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
                     return ListView.builder(
                         itemCount: snapshot.data.docs.length,
                         itemBuilder: (ctx, index) => ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage: NetworkImage(snapshot
-                                    .data.docs[index]
-                                    .data()['imageUrl']),
-                              ),
+                              leading: (snapshot.data.docs[index]
+                                          .data()['imageUrl'] !=
+                                      null)
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(snapshot
+                                          .data.docs[index]
+                                          .data()['imageUrl']))
+                                  : CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.no_photography,
+                                        color: Colors.red,
+                                      ),
+                                    ),
                               title: Text(snapshot.data.docs[index]['name']),
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ItemDetailScreen(
-                                        item: snapshot.data.docs[index].data(),
-                                      ),
-                                    ));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ItemDetailScreen(
+                                      item: snapshot.data.docs[index].data(),
+                                    ),
+                                  ),
+                                );
                               },
                             ));
                   })),
