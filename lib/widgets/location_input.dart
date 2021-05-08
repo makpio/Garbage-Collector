@@ -8,8 +8,8 @@ import '../screens/map_screen.dart';
 
 class LocationInput extends StatefulWidget {
   final Function onSelectLocation;
-
-  LocationInput(this.onSelectLocation);
+  final LatLng initLocation;
+  LocationInput(this.onSelectLocation, this.initLocation);
 
   @override
   _LocationInputState createState() => _LocationInputState();
@@ -19,6 +19,15 @@ class _LocationInputState extends State<LocationInput> {
   LatLng _location;
 
   final MapController controller = new MapController();
+
+  @override
+  void initState() {
+    if (widget.initLocation != null) {
+      _location = widget.initLocation;
+    }
+
+    super.initState();
+  }
 
   void _selectLocation() async {
     final selectedLocation =

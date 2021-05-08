@@ -6,16 +6,25 @@ import 'package:path_provider/path_provider.dart';
 
 class ImageInput extends StatefulWidget {
   final Function onSelectImage;
-
-  ImageInput(this.onSelectImage);
+  final Image initImage;
+  ImageInput(this.onSelectImage, this.initImage);
 
   @override
   _ImageInputState createState() => _ImageInputState();
 }
 
 class _ImageInputState extends State<ImageInput> {
-  File _image;
+  Image _image;
   final picker = ImagePicker();
+
+  @override
+  void initState() {
+    if (widget.initImage != null) {
+      _image = widget.initImage;
+    }
+
+    super.initState();
+  }
 
   Future<void> _selectImage() async {
     final imageFile = await picker.getImage(
@@ -38,7 +47,11 @@ class _ImageInputState extends State<ImageInput> {
   Future<void> _saveImage(PickedFile imageFile) async {
     setState(() {
       if (imageFile != null) {
-        _image = File(imageFile.path);
+        _image = Image.file(
+          File(imageFile.path),
+          fit: BoxFit.cover,
+          width: double.infinity,
+        );
       }
     });
     final appDirectory = await getApplicationDocumentsDirectory();
@@ -60,11 +73,7 @@ class _ImageInputState extends State<ImageInput> {
             border: Border.all(width: 1, color: Colors.black12),
           ),
           child: _image != null
-              ? Image.file(
-                  _image,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                )
+              ? _image
               : Text(
                   'No image selected',
                   textAlign: TextAlign.center,
