@@ -122,10 +122,8 @@ class _EditItemScreenState extends State<EditItemScreen> {
                     .collection('items')
                     .doc(widget.docId)
                     .delete()
-                    .then((value) => Navigator.pushReplacement(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => new MyItemsScreen())))
+                    .then((value) => Navigator.pop(context))
+                    .then((value) => Navigator.pop(context))
                     .catchError(
                         (error) => ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
