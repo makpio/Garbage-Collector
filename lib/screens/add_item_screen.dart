@@ -31,7 +31,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
     _selectedLocation = selectedLocation;
   }
 
-  void _saveitem() async {
+  void _saveItem() async {
     if (_nameController.text.isEmpty || _selectedImage == null) {
       return;
     }
@@ -124,7 +124,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
           ElevatedButton.icon(
             icon: Icon(Icons.add),
             label: Text('Add Item'),
-            onPressed: _saveitem,
+            onPressed: _saveItem,
             style: ElevatedButton.styleFrom(
               primary: Colors.red,
               elevation: 10,
