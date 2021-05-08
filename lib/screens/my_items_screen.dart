@@ -26,9 +26,9 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
+            icon: Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed(AddItemScreen.routeName);
             },
           ),
         ],
@@ -90,18 +90,6 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
                               },
                             ));
                   })),
-          ElevatedButton.icon(
-            icon: Icon(Icons.add),
-            label: Text('Add New Item'),
-            onPressed: () {
-              Navigator.of(context).pushNamed(AddItemScreen.routeName);
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.red,
-              elevation: 10,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-          ),
         ],
       ),
     );
