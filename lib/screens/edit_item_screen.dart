@@ -1,13 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:garbage_collector/screens/my_items_screen.dart';
 import 'package:garbage_collector/widgets/location_input.dart';
 import '../widgets/image_input.dart';
 import 'package:path/path.dart' as path;
 import 'package:latlong/latlong.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -66,20 +63,33 @@ class _EditItemScreenState extends State<EditItemScreen> {
     _selectedLocation = selectedLocation;
   }
 
-  void _saveitem() async {
-    if (this._nameController.text.isEmpty || _selectedImage == null) {
+  void _editItem() async {
+    if (this._nameController.text.isEmpty) {
       return;
     }
-    try {
+
+    String downloadUrl;
+    if (_selectedImage != null) {
       String fileName = path.basename(_selectedImage.path);
       Reference firebaseStorageRef =
           FirebaseStorage.instance.ref().child('uploads/$fileName');
       UploadTask uploadTask = firebaseStorageRef.putFile(_selectedImage);
       TaskSnapshot taskSnapshot = await uploadTask;
-      String downloadUrl = (await taskSnapshot.ref.getDownloadURL()).toString();
-      DocumentReference docRef =
-          await FirebaseFirestore.instance.collection('items').add({
-        'user': FirebaseAuth.instance.currentUser.uid,
+      downloadUrl = (await taskSnapshot.ref.getDownloadURL()).toString();
+    } else {
+      downloadUrl = widget.item['imageUrl'];
+    }
+
+    if (_selectedLocation == null) {
+      _selectedLocation = _initLocation;
+    }
+
+    try {
+      print(widget.docId);
+      await FirebaseFirestore.instance
+          .collection('items')
+          .doc(widget.docId)
+          .update({
         'name': _nameController.text,
         'imageUrl': downloadUrl,
         'location.lat': _selectedLocation.latitude,
@@ -87,8 +97,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
       });
 
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } catch (err) {
-      var message = 'An error occured during adding new item';
+      var message = 'An error occured during editing item';
 
       if (err.message != null) {
         message = err.message;
@@ -182,7 +193,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
           ElevatedButton.icon(
             icon: Icon(Icons.add),
             label: Text('Save Item'),
-            onPressed: _saveitem,
+            onPressed: _editItem,
             style: ElevatedButton.styleFrom(
               primary: Colors.blue,
               elevation: 10,

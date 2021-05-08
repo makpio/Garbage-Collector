@@ -42,8 +42,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       UploadTask uploadTask = firebaseStorageRef.putFile(_selectedImage);
       TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = (await taskSnapshot.ref.getDownloadURL()).toString();
-      DocumentReference docRef =
-          await FirebaseFirestore.instance.collection('items').add({
+      await FirebaseFirestore.instance.collection('items').add({
         'user': FirebaseAuth.instance.currentUser.uid,
         'name': _nameController.text,
         'imageUrl': downloadUrl,
