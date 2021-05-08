@@ -7,8 +7,9 @@ import 'edit_item_screen.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final item;
-
-  ItemDetailScreen({Key key, @required this.item}) : super(key: key);
+  final docId;
+  ItemDetailScreen({Key key, @required this.item, @required this.docId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +20,9 @@ class ItemDetailScreen extends StatelessWidget {
           item['name'],
           textAlign: TextAlign.center,
         ),
-        actions: FirebaseAuth.instance.currentUser.uid == item['user']
-            ? <Widget>[
-                IconButton(
+        actions: <Widget>[
+          FirebaseAuth.instance.currentUser.uid == item['user']
+              ? IconButton(
                   icon: Icon(Icons.edit_outlined),
                   onPressed: () {
                     Navigator.push(
@@ -29,13 +30,19 @@ class ItemDetailScreen extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => EditItemScreen(
                           item: item,
+                          docId: docId,
                         ),
                       ),
                     );
                   },
+                )
+              : IconButton(
+                  icon: Icon(Icons.star_outlined),
+                  onPressed: () {
+                    //observe_item - do ot
+                  },
                 ),
-              ]
-            : null,
+        ],
       ),
       body: Column(
         children: <Widget>[

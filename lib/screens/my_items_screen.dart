@@ -79,11 +79,13 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
                                     ),
                               title: Text(snapshot.data.docs[index]['name']),
                               onTap: () {
+                                String docId = snapshot.data.docs[index].id;
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ItemDetailScreen(
                                       item: snapshot.data.docs[index].data(),
+                                      docId: docId,
                                     ),
                                   ),
                                 );

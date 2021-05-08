@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:garbage_collector/screens/my_items_screen.dart';
 import 'package:garbage_collector/widgets/location_input.dart';
 import '../widgets/image_input.dart';
 import 'package:path/path.dart' as path;
@@ -14,7 +15,13 @@ class EditItemScreen extends StatefulWidget {
   //static const routeName = '/edit-item';
 
   final item;
-  EditItemScreen({Key key, @required this.item}) : super(key: key);
+  final docId;
+
+  EditItemScreen({
+    Key key,
+    @required this.item,
+    @required this.docId,
+  }) : super(key: key);
 
   @override
   _EditItemScreenState createState() => _EditItemScreenState();
@@ -105,6 +112,29 @@ class _EditItemScreenState extends State<EditItemScreen> {
           'Edit ' + widget.item['name'],
           textAlign: TextAlign.center,
         ),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () async {
+                print('xd');
+                print(widget.docId);
+                await FirebaseFirestore.instance
+                    .collection('items')
+                    .doc(widget.docId)
+                    .delete()
+                    .then((value) => Navigator.pushReplacement(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => new MyItemsScreen())))
+                    .catchError(
+                        (error) => ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(error),
+                                backgroundColor: Theme.of(context).errorColor,
+                              ),
+                            ));
+              }),
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
