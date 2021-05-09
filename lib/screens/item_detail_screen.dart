@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'edit_item_screen.dart';
 
 class ItemDetailScreen extends StatelessWidget {
@@ -123,16 +123,6 @@ class ItemDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  // GestureDetector(
-                  //   onTap: ({String xd = "50", xdd = "20"}) async {
-                  //     var mapSchema = 'geo:$xd,$xdd';
-                  //     if (await canLaunch(mapSchema)) {
-                  //       await launch(mapSchema);
-                  //     } else {
-                  //       throw 'Could not launch $mapSchema';
-                  //     }
-                  //   },
-                  //   child:
                   Container(
                     height: 200,
                     width: double.infinity,
@@ -179,6 +169,32 @@ class ItemDetailScreen extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: TextButton.icon(
+                          icon: Icon(Icons.location_on),
+                          label: Text(
+                            'Open in GoogleMaps',
+                            textAlign: TextAlign.center,
+                          ),
+                          onPressed: () async {
+                            print('xd');
+                            final xd = item['location.lat'];
+                            final xdd = item['location.lng'];
+                            final mapSchema = 'geo:$xd,$xdd';
+                            if (await canLaunch(mapSchema)) {
+                              await launch(mapSchema);
+                            } else {
+                              throw 'Could not launch $mapSchema';
+                            }
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
