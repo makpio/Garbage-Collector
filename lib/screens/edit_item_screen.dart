@@ -81,9 +81,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
       downloadUrl = widget.item['imageUrl'];
     }
 
-    // if (_selectedLocation == null) {
-    //   _selectedLocation = _initLocation;
-    // }
+    if (_selectedLocation == null) {
+      _selectedLocation = _initLocation;
+    }
 
     try {
       print(_selectedLocation.latitude);
