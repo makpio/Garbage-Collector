@@ -130,11 +130,12 @@ class ItemDetailScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(width: 5, color: Colors.white),
                     ),
-                    child: item['location.lng'] != null
+                    child: (item['location_lng'] != null &&
+                            item['location_lat'] != null)
                         ? FlutterMap(
                             options: new MapOptions(
                               center: new LatLng(
-                                  item['location.lat'], item['location.lng']),
+                                  item['location_lat'], item['location_lng']),
                               zoom: 13.0,
                               maxZoom: 18,
                               minZoom: 4,
@@ -150,8 +151,8 @@ class ItemDetailScreen extends StatelessWidget {
                                   new Marker(
                                     width: 40.0,
                                     height: 40.0,
-                                    point: new LatLng(item['location.lat'],
-                                        item['location.lng']),
+                                    point: new LatLng(item['location_lat'],
+                                        item['location_lng']),
                                     builder: (ctx) => new Container(
                                       child: Icon(
                                         Icons.room,
@@ -183,8 +184,8 @@ class ItemDetailScreen extends StatelessWidget {
                           ),
                           onPressed: () async {
                             print('xd');
-                            final xd = item['location.lat'];
-                            final xdd = item['location.lng'];
+                            final xd = item['location_lat'];
+                            final xdd = item['location_lng'];
                             final mapSchema = 'geo:$xd,$xdd';
                             if (await canLaunch(mapSchema)) {
                               await launch(mapSchema);

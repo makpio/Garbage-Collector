@@ -47,10 +47,10 @@ class _EditItemScreenState extends State<EditItemScreen> {
         width: double.infinity,
       );
     }
-    if (widget.item['location.lat'] != null &&
-        widget.item['location.lng'] != null) {
+    if (widget.item['location_lat'] != null &&
+        widget.item['location_lng'] != null) {
       _initLocation =
-          new LatLng(widget.item['location.lat'], widget.item['location.lng']);
+          new LatLng(widget.item['location_lat'], widget.item['location_lng']);
     }
     super.initState();
   }
@@ -60,6 +60,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   void _selectLocation(LatLng selectedLocation) {
+    print('xdd');
     _selectedLocation = selectedLocation;
   }
 
@@ -80,20 +81,20 @@ class _EditItemScreenState extends State<EditItemScreen> {
       downloadUrl = widget.item['imageUrl'];
     }
 
-    if (_selectedLocation == null) {
-      _selectedLocation = _initLocation;
-    }
+    // if (_selectedLocation == null) {
+    //   _selectedLocation = _initLocation;
+    // }
 
     try {
-      print(widget.docId);
+      print(_selectedLocation.latitude);
       await FirebaseFirestore.instance
           .collection('items')
           .doc(widget.docId)
           .update({
         'name': _nameController.text,
         'imageUrl': downloadUrl,
-        'location.lat': _selectedLocation.latitude,
-        'location.lng': _selectedLocation.longitude,
+        'location_lat': _selectedLocation.latitude,
+        'location_lng': _selectedLocation.longitude,
       });
 
       Navigator.of(context).pop();

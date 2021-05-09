@@ -46,8 +46,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
         'user': FirebaseAuth.instance.currentUser.uid,
         'name': _nameController.text,
         'imageUrl': downloadUrl,
-        'location.lat': _selectedLocation.latitude,
-        'location.lng': _selectedLocation.longitude,
+        'location_lat': _selectedLocation.latitude,
+        'location_lng': _selectedLocation.longitude,
       });
 
       Navigator.of(context).pop();
