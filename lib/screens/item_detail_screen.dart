@@ -12,7 +12,7 @@ class ItemDetailScreen extends StatefulWidget {
   final itemId;
 
   ItemDetailScreen(
-      {Key key, @required this.item, @required this.itemId, isStarred})
+      {Key key, @required this.item, @required this.itemId,})
       : super(key: key);
 
   @override
