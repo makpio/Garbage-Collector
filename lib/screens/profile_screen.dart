@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:garbage_collector/screens/edit_profile_screen.dart';
 import 'package:latlong/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'edit_item_screen.dart';
@@ -29,15 +30,15 @@ class ProfileScreen extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.edit_outlined),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => EditProfileScreen(
-                    //       item: item,
-                    //       itemId: itemId,
-                    //     ),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditUserScreen(
+                          user: user,
+                          userId: userId,
+                        ),
+                      ),
+                    );
                   },
                 )
               ],
@@ -54,17 +55,29 @@ class ProfileScreen extends StatelessWidget {
           Expanded(
             child: Column(
               children: <Widget>[
-                Container(
-                    width: 500.0,
-                    height: 500.0,
-                    decoration: BoxDecoration(
-                        //border: Border.all(width: 5, color: Colors.white),
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(user['imageUrl']),
-                          alignment: Alignment.center,
-                        ))),
+                user['imageUrl'] != null
+                    ? Container(
+                        width: 500.0,
+                        height: 500.0,
+                        decoration: BoxDecoration(
+                            //border: Border.all(width: 5, color: Colors.white),
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(user['imageUrl']),
+                              alignment: Alignment.center,
+                            )))
+                    : Container(
+                        width: 500.0,
+                        height: 500.0,
+                        child: Text(
+                          'No image selected',
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        alignment: Alignment.center,
+                      ),
                 SizedBox(
                   height: 10,
                 ),
@@ -171,7 +184,6 @@ class ProfileScreen extends StatelessWidget {
                       Flexible(
                         child: Text(
                           user['phoneNo'].toString(),
-                          //'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,
