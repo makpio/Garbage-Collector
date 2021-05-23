@@ -121,14 +121,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
               ),
             ),
           ),
-          ElevatedButton.icon(
-            icon: Icon(Icons.add),
-            label: Text('Add Item'),
-            onPressed: _saveItem,
-            style: ElevatedButton.styleFrom(
-              primary: Colors.red,
-              elevation: 10,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: ElevatedButton.icon(
+              icon: Icon(Icons.add),
+              label: Text('Add Item'),
+              onPressed: _saveItem,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+                elevation: 10,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
             ),
           ),
         ],

@@ -5,8 +5,6 @@ import 'package:garbage_collector/screens/item_detail_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'add_item_screen.dart';
-
 class StarredItemsScreen extends StatefulWidget {
   static const routeName = '/starred-items-list';
 

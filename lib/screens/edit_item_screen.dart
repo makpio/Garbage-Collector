@@ -60,7 +60,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
   }
 
   void _selectLocation(LatLng selectedLocation) {
-    print('xdd');
     _selectedLocation = selectedLocation;
   }
 
@@ -86,7 +85,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
     }
 
     try {
-      print(_selectedLocation.latitude);
       await FirebaseFirestore.instance
           .collection('items')
           .doc(widget.itemId)
@@ -128,7 +126,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
           IconButton(
               icon: Icon(Icons.delete),
               onPressed: () async {
-                print('xd');
                 print(widget.itemId);
                 await FirebaseFirestore.instance
                     .collection('items')
@@ -191,14 +188,17 @@ class _EditItemScreenState extends State<EditItemScreen> {
               ),
             ),
           ),
-          ElevatedButton.icon(
-            icon: Icon(Icons.add),
-            label: Text('Save Item'),
-            onPressed: _editItem,
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blue,
-              elevation: 10,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: ElevatedButton.icon(
+              icon: Icon(Icons.add),
+              label: Text('Save Item'),
+              onPressed: _editItem,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                elevation: 10,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
             ),
           ),
         ],

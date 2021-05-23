@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garbage_collector/screens/auth_screen.dart';
 import 'package:garbage_collector/screens/map_screen.dart';
-import 'package:garbage_collector/screens/search_result_screen.dart';
+import 'package:garbage_collector/screens/search_screen.dart';
 import 'package:garbage_collector/screens/starred_items_screen.dart';
 import 'package:garbage_collector/screens/start_screen.dart';
 
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         AddItemScreen.routeName: (_) => AddItemScreen(),
         MapScreen.routeName: (_) => MapScreen(),
         StartScreen.routeName: (_) => StartScreen(),
-        SearchResultScreen.routeName: (_) => SearchResultScreen(),
+        SearchScreen.routeName: (_) => SearchScreen(),
         StarredItemsScreen.routeName: (_) => StarredItemsScreen(),
       },
     );

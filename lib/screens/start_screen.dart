@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_collector/screens/my_items_screen.dart';
-import 'package:garbage_collector/screens/search_result_screen.dart';
+import 'package:garbage_collector/screens/search_screen.dart';
 import 'package:garbage_collector/screens/profile_screen.dart';
 import 'package:garbage_collector/screens/starred_items_screen.dart';
 
@@ -96,7 +96,6 @@ class StartScreen extends StatelessWidget {
                       Text(
                         '  My Items  ',
                         textAlign: TextAlign.center,
-                        //overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -115,8 +114,7 @@ class StartScreen extends StatelessWidget {
               heightFactor: 1,
               child: GestureDetector(
                 onTap: () {
-                  //TODO - search items screen
-                  Navigator.of(context).pushNamed(SearchResultScreen.routeName);
+                  Navigator.of(context).pushNamed(SearchScreen.routeName);
                 },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
@@ -138,7 +136,6 @@ class StartScreen extends StatelessWidget {
                       Text(
                         '  Find Item  ',
                         textAlign: TextAlign.center,
-                        //overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -179,7 +176,6 @@ class StartScreen extends StatelessWidget {
                       Text(
                         '  Starred     ',
                         textAlign: TextAlign.center,
-                        //overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -220,7 +216,6 @@ class StartScreen extends StatelessWidget {
                       Text(
                         '  Log out  ',
                         textAlign: TextAlign.center,
-                        //overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

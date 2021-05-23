@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
@@ -11,9 +10,11 @@ class ItemDetailScreen extends StatefulWidget {
   final item;
   final itemId;
 
-  ItemDetailScreen(
-      {Key key, @required this.item, @required this.itemId,})
-      : super(key: key);
+  ItemDetailScreen({
+    Key key,
+    @required this.item,
+    @required this.itemId,
+  }) : super(key: key);
 
   @override
   _ItemDetailScreenState createState() => _ItemDetailScreenState();

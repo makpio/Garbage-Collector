@@ -2,10 +2,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:garbage_collector/widgets/location_input.dart';
 import '../widgets/image_input.dart';
 import 'package:path/path.dart' as path;
-import 'package:latlong/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -218,14 +216,17 @@ class _EditUserScreenState extends State<EditUserScreen> {
               ),
             ),
           ),
-          ElevatedButton.icon(
-            icon: Icon(Icons.add),
-            label: Text('Save Profile'),
-            onPressed: _editUser,
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blue,
-              elevation: 10,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: ElevatedButton.icon(
+              icon: Icon(Icons.add),
+              label: Text('Save Profile'),
+              onPressed: _editUser,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                elevation: 10,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
             ),
           ),
         ],

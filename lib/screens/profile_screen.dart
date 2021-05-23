@@ -1,10 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:garbage_collector/screens/edit_profile_screen.dart';
-import 'package:latlong/latlong.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'edit_item_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   final user;
