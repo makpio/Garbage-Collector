@@ -1,15 +1,77 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'edit_item_screen.dart';
 
-class ItemDetailScreen extends StatelessWidget {
+class ItemDetailScreen extends StatefulWidget {
   final item;
-  final docId;
-  ItemDetailScreen({Key key, @required this.item, @required this.docId})
+  final itemId;
+
+  ItemDetailScreen(
+      {Key key, @required this.item, @required this.itemId, isStarred})
       : super(key: key);
+
+  @override
+  _ItemDetailScreenState createState() => _ItemDetailScreenState();
+}
+
+class _ItemDetailScreenState extends State<ItemDetailScreen> {
+  bool isStarred;
+
+  void _checkIfStarred() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((user) {
+      var starredItems = user.data()['starredItems'] ?? [];
+      setState(() {
+        isStarred = starredItems.contains(widget.itemId) ? true : false;
+      });
+    });
+  }
+
+  void _starItem() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .update({
+      'starredItems': FieldValue.arrayUnion([widget.itemId.toString()]),
+    }).catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Theme.of(context).errorColor,
+              ),
+            ));
+
+    _checkIfStarred();
+  }
+
+  void _unstarItem() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .update({
+      'starredItems': FieldValue.arrayRemove([widget.itemId.toString()]),
+    }).catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Theme.of(context).errorColor,
+              ),
+            ));
+
+    _checkIfStarred();
+  }
+
+  @override
+  void initState() {
+    _checkIfStarred();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +79,11 @@ class ItemDetailScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          item['name'],
+          widget.item['name'],
           textAlign: TextAlign.center,
         ),
         actions: <Widget>[
-          FirebaseAuth.instance.currentUser.uid == item['user']
+          FirebaseAuth.instance.currentUser.uid == widget.item['user']
               ? IconButton(
                   icon: Icon(Icons.edit_outlined),
                   onPressed: () {
@@ -29,19 +91,26 @@ class ItemDetailScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => EditItemScreen(
-                          item: item,
-                          docId: docId,
+                          item: widget.item,
+                          itemId: widget.itemId,
                         ),
                       ),
                     );
                   },
                 )
-              : IconButton(
-                  icon: Icon(Icons.star_outlined),
-                  onPressed: () {
-                    //observe_item - do ot
-                  },
-                ),
+              : isStarred == true
+                  ? IconButton(
+                      icon: Icon(Icons.star_outlined),
+                      onPressed: () {
+                        _unstarItem();
+                      },
+                    )
+                  : IconButton(
+                      icon: Icon(Icons.star_border),
+                      onPressed: () {
+                        _starItem();
+                      },
+                    ),
         ],
       ),
       body: Column(
@@ -57,9 +126,9 @@ class ItemDetailScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(width: 5, color: Colors.white),
                     ),
-                    child: item['imageUrl'] != null
+                    child: widget.item['imageUrl'] != null
                         ? Image.network(
-                            item['imageUrl'],
+                            widget.item['imageUrl'],
                             fit: BoxFit.cover,
                             width: double.infinity,
                           )
@@ -130,12 +199,12 @@ class ItemDetailScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border.all(width: 5, color: Colors.white),
                     ),
-                    child: (item['location_lng'] != null &&
-                            item['location_lat'] != null)
+                    child: (widget.item['location_lng'] != null &&
+                            widget.item['location_lat'] != null)
                         ? FlutterMap(
                             options: new MapOptions(
-                              center: new LatLng(
-                                  item['location_lat'], item['location_lng']),
+                              center: new LatLng(widget.item['location_lat'],
+                                  widget.item['location_lng']),
                               zoom: 13.0,
                               maxZoom: 18,
                               minZoom: 4,
@@ -151,8 +220,9 @@ class ItemDetailScreen extends StatelessWidget {
                                   new Marker(
                                     width: 40.0,
                                     height: 40.0,
-                                    point: new LatLng(item['location_lat'],
-                                        item['location_lng']),
+                                    point: new LatLng(
+                                        widget.item['location_lat'],
+                                        widget.item['location_lng']),
                                     builder: (ctx) => new Container(
                                       child: Icon(
                                         Icons.room,
@@ -183,9 +253,8 @@ class ItemDetailScreen extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                           onPressed: () async {
-                            print('xd');
-                            final xd = item['location_lat'];
-                            final xdd = item['location_lng'];
+                            final xd = widget.item['location_lat'];
+                            final xdd = widget.item['location_lng'];
                             final mapSchema = 'geo:$xd,$xdd';
                             if (await canLaunch(mapSchema)) {
                               await launch(mapSchema);

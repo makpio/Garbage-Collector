@@ -34,6 +34,7 @@ class _AuthScreenState extends State<AuthScreen> {
             .set({
           'username': username,
           'email': email,
+          'starredItems': [],
         });
       }
 

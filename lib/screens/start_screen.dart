@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_collector/screens/my_items_screen.dart';
+import 'package:garbage_collector/screens/search_result_screen.dart';
+import 'package:garbage_collector/screens/profile_screen.dart';
+import 'package:garbage_collector/screens/starred_items_screen.dart';
 
 class StartScreen extends StatelessWidget {
   static const routeName = '/start-screen';
@@ -32,8 +35,14 @@ class StartScreen extends StatelessWidget {
               heightFactor: 1,
               child: GestureDetector(
                 onTap: () {
-                  //TODO - Userprofile screen
-                  //Navigator.of(context).pushNamed(UserProfileScreen.routeName);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => ProfileScreen(
+                  //       profileUid: FirebaseAuth.instance.currentUser.uid,
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
@@ -115,7 +124,7 @@ class StartScreen extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   //TODO - search items screen
-                  //Navigator.of(context).pushNamed(SearchItemsScreen.routeName);
+                  Navigator.of(context).pushNamed(SearchResultScreen.routeName);
                 },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
@@ -156,8 +165,7 @@ class StartScreen extends StatelessWidget {
               heightFactor: 1,
               child: GestureDetector(
                 onTap: () {
-                  //TODO - starred items screen
-                  //Navigator.of(context).pushNamed(StarredItemsScreen.routeName);
+                  Navigator.of(context).pushNamed(StarredItemsScreen.routeName);
                 },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
