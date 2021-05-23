@@ -12,12 +12,12 @@ class EditItemScreen extends StatefulWidget {
   //static const routeName = '/edit-item';
 
   final item;
-  final docId;
+  final itemId;
 
   EditItemScreen({
     Key key,
     @required this.item,
-    @required this.docId,
+    @required this.itemId,
   }) : super(key: key);
 
   @override
@@ -89,7 +89,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       print(_selectedLocation.latitude);
       await FirebaseFirestore.instance
           .collection('items')
-          .doc(widget.docId)
+          .doc(widget.itemId)
           .update({
         'name': _nameController.text,
         'imageUrl': downloadUrl,
@@ -129,10 +129,10 @@ class _EditItemScreenState extends State<EditItemScreen> {
               icon: Icon(Icons.delete),
               onPressed: () async {
                 print('xd');
-                print(widget.docId);
+                print(widget.itemId);
                 await FirebaseFirestore.instance
                     .collection('items')
-                    .doc(widget.docId)
+                    .doc(widget.itemId)
                     .delete()
                     .then((value) => Navigator.pop(context))
                     .then((value) => Navigator.pop(context))
