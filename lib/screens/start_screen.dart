@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:garbage_collector/screens/my_items_screen.dart';
@@ -12,21 +13,6 @@ class StartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.blue,
-        // appBar: AppBar(
-        //   centerTitle: true,
-        //   title: Text(
-        //     'Home Screen',
-        //     textAlign: TextAlign.center,
-        //   ),
-        //   actions: [
-        //     IconButton(
-        //       icon: Icon(Icons.remove_red_eye_sharp),
-        //       onPressed: () {
-        //
-        //       },
-        //     )
-        //   ],
-        // ),
         body: SafeArea(
             child: Column(children: [
           Flexible(
@@ -34,15 +20,21 @@ class StartScreen extends StatelessWidget {
               alignment: Alignment.topCenter,
               heightFactor: 1,
               child: GestureDetector(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => ProfileScreen(
-                  //       profileUid: FirebaseAuth.instance.currentUser.uid,
-                  //     ),
-                  //   ),
-                  // );
+                onTap: () async {
+                  var currentUser = await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser.uid)
+                      .snapshots()
+                      .first;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileScreen(
+                        user: currentUser.data(),
+                        userId: FirebaseAuth.instance.currentUser.uid,
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   padding: EdgeInsets.all(10.0),
