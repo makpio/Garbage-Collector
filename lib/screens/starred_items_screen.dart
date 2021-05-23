@@ -94,7 +94,11 @@ class _StarredItemsScreenState extends State<StarredItemsScreen> {
                                         color: Colors.red,
                                       ),
                                     ),
-                              title: Text(snapshot.data.docs[index]['name']),
+                              title:
+                                  (snapshot.data.docs[index].data()['name'] !=
+                                          null)
+                                      ? Text(snapshot.data.docs[index]['name'])
+                                      : null,
                               onTap: () {
                                 String itemId = snapshot.data.docs[index].id;
                                 Navigator.push(

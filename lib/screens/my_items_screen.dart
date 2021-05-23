@@ -60,37 +60,63 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
                           ),
                         ],
                       );
-                    return ListView.builder(
-                        itemCount: snapshot.data.docs.length,
-                        itemBuilder: (ctx, index) => ListTile(
-                              leading: (snapshot.data.docs[index]
-                                          .data()['imageUrl'] !=
-                                      null)
-                                  ? CircleAvatar(
-                                      backgroundImage: NetworkImage(snapshot
-                                          .data.docs[index]
-                                          .data()['imageUrl']))
-                                  : CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        Icons.no_photography,
-                                        color: Colors.red,
+
+                    return snapshot.data.docs.length > 0
+                        ? ListView.builder(
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (ctx, index) => ListTile(
+                                  leading: (snapshot.data.docs[index]
+                                              .data()['imageUrl'] !=
+                                          null)
+                                      ? CircleAvatar(
+                                          backgroundImage: NetworkImage(snapshot
+                                              .data.docs[index]
+                                              .data()['imageUrl']))
+                                      : CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          child: Icon(
+                                            Icons.no_photography,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                  title: (snapshot.data.docs[index]
+                                              .data()['name'] !=
+                                          null)
+                                      ? Text(snapshot.data.docs[index]['name'])
+                                      : null,
+                                  onTap: () {
+                                    String itemId =
+                                        snapshot.data.docs[index].id;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ItemDetailScreen(
+                                          item:
+                                              snapshot.data.docs[index].data(),
+                                          itemId: itemId,
+                                        ),
                                       ),
-                                    ),
-                              title: Text(snapshot.data.docs[index]['name']),
-                              onTap: () {
-                                String itemId = snapshot.data.docs[index].id;
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ItemDetailScreen(
-                                      item: snapshot.data.docs[index].data(),
-                                      itemId: itemId,
-                                    ),
+                                    );
+                                  },
+                                ))
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Center(
+                                child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  margin: EdgeInsets.all(5),
+                                  child: Text(
+                                    'No items',
+                                    textAlign: TextAlign.center,
                                   ),
-                                );
-                              },
-                            ));
+                                ),
+                              ),
+                            ],
+                          );
+                    ;
                   })),
         ],
       ),
