@@ -253,13 +253,15 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                             textAlign: TextAlign.center,
                           ),
                           onPressed: () async {
-                            final xd = widget.item['location_lat'];
-                            final xdd = widget.item['location_lng'];
-                            final mapSchema = 'geo:$xd,$xdd';
-                            if (await canLaunch(mapSchema)) {
-                              await launch(mapSchema);
+                            final lat = widget.item['location_lat'];
+                            final lng = widget.item['location_lng'];
+                            final url =
+                                'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
+
+                            if (await canLaunch(url)) {
+                              await launch(url);
                             } else {
-                              throw 'Could not launch $mapSchema';
+                              throw 'Could not launch $url';
                             }
                           },
                         ),
