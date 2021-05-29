@@ -54,6 +54,60 @@ class _EditUserScreenState extends State<EditUserScreen> {
     _selectedImage = selectedImage;
   }
 
+  _showDeleteAlert(BuildContext context) {
+    AlertDialog deleteAlert = AlertDialog(
+      title: Text("Are you sure you want to delete this user?"),
+      actions: [
+        ElevatedButton.icon(
+          icon: Icon(Icons.delete),
+          label: Text("Delete"),
+          onPressed: () async {
+            _deleteUser();
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.red,
+            elevation: 10,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+        ElevatedButton.icon(
+          icon: Icon(Icons.cancel),
+          label: Text("Cancel"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return deleteAlert;
+      },
+    );
+  }
+
+  void _deleteUser() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .delete()
+        .then((value) => Navigator.pop(context))
+        .then((value) => Navigator.pop(context))
+        .then((value) => Navigator.pop(context))
+        .then((value) {
+          var firebaseUser = FirebaseAuth.instance.currentUser;
+          firebaseUser.delete();
+        })
+        .then((value) => FirebaseAuth.instance.signOut())
+        .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Theme.of(context).errorColor,
+              ),
+            ));
+  }
+
   void _editUser() async {
     // if (this._nameController.text.isEmpty) {
     //   return;
@@ -124,25 +178,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
           IconButton(
               icon: Icon(Icons.delete),
               onPressed: () async {
-                print(widget.userId);
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(widget.userId)
-                    .delete()
-                    .then((value) => Navigator.pop(context))
-                    .then((value) => Navigator.pop(context))
-                    .then((value) {
-                      var firebaseUser = FirebaseAuth.instance.currentUser;
-                      firebaseUser.delete();
-                    })
-                    .then((value) => FirebaseAuth.instance.signOut())
-                    .catchError(
-                        (error) => ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(error),
-                                backgroundColor: Theme.of(context).errorColor,
-                              ),
-                            ));
+                _showDeleteAlert(context);
               }),
         ],
       ),

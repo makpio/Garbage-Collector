@@ -63,6 +63,56 @@ class _EditItemScreenState extends State<EditItemScreen> {
     _selectedLocation = selectedLocation;
   }
 
+  void _deleteItem() async {
+    await FirebaseFirestore.instance
+        .collection('items')
+        .doc(widget.itemId)
+        .delete()
+        .then((value) => Navigator.pop(context))
+        .then((value) => Navigator.pop(context))
+        .then((value) => Navigator.pop(context))
+        .catchError((error) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Theme.of(context).errorColor,
+              ),
+            ));
+  }
+
+  _showDeleteAlert(BuildContext context) {
+    AlertDialog deleteAlert = AlertDialog(
+      title: Text("Are you sure you want to delete this item?"),
+      //content: Text("Are you sure you want to delete this item?"),
+      actions: [
+        ElevatedButton.icon(
+          icon: Icon(Icons.delete),
+          label: Text("Delete"),
+          onPressed: () async {
+            _deleteItem();
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Colors.red,
+            elevation: 10,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+        ElevatedButton.icon(
+          icon: Icon(Icons.cancel),
+          label: Text("Cancel"),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return deleteAlert;
+      },
+    );
+  }
+
   void _editItem() async {
     if (this._nameController.text.isEmpty) {
       return;
@@ -126,20 +176,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
           IconButton(
               icon: Icon(Icons.delete),
               onPressed: () async {
-                print(widget.itemId);
-                await FirebaseFirestore.instance
-                    .collection('items')
-                    .doc(widget.itemId)
-                    .delete()
-                    .then((value) => Navigator.pop(context))
-                    .then((value) => Navigator.pop(context))
-                    .catchError(
-                        (error) => ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(error),
-                                backgroundColor: Theme.of(context).errorColor,
-                              ),
-                            ));
+                _showDeleteAlert(context);
               }),
         ],
       ),
