@@ -1,7 +1,10 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:garbage_collector/screens/profile_screen.dart';
 import 'package:latlong/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'edit_item_screen.dart';
@@ -22,6 +25,7 @@ class ItemDetailScreen extends StatefulWidget {
 
 class _ItemDetailScreenState extends State<ItemDetailScreen> {
   bool isStarred;
+  String userOwner;
 
   void _checkIfStarred() async {
     await FirebaseFirestore.instance
@@ -68,8 +72,26 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     _checkIfStarred();
   }
 
+  void _getUserName() async {
+    var user = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.item['user'])
+        .snapshots()
+        .first;
+    try {
+      setState(() {
+        userOwner = user.data()['username'].toString();
+      });
+    } catch (error) {
+      setState(() {
+        userOwner = null;
+      });
+    }
+  }
+
   @override
   void initState() {
+    _getUserName();
     _checkIfStarred();
     super.initState();
   }
@@ -151,47 +173,62 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       border: Border.all(width: 5, color: Colors.white),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.phone_android_outlined,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          GestureDetector(
+                            onTap: () async {
+                              var currentUser = await FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(widget.item['user'])
+                                  .snapshots()
+                                  .first;
+                              if (currentUser != null &&
+                                  currentUser.data()['username'] != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfileScreen(
+                                      user: currentUser.data(),
+                                      userId: widget.item['user'],
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: Row(children: [
+                              SizedBox(width: 5),
+                              Icon(
+                                Icons.face_outlined,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 20),
+                              Text(
+                                ' Added by ',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.blue,
                                 ),
-                                Text(
-                                  "123456",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                        Expanded(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.mail_outline,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  "12@34.56",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      ],
-                    ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ]),
+                          ),
+                          Spacer(),
+                          Flexible(
+                            child: Text(
+                              userOwner != null ? userOwner : 'Unknown',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                        ]),
                   ),
                   Container(
                     height: 200,
