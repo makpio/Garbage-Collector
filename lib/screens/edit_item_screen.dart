@@ -140,6 +140,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
           .doc(widget.itemId)
           .update({
         'name': _nameController.text,
+        'description': _descriptionController.text,
         'imageUrl': downloadUrl,
         'location_lat': _selectedLocation.latitude,
         'location_lng': _selectedLocation.longitude,

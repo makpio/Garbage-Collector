@@ -45,6 +45,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
       await FirebaseFirestore.instance.collection('items').add({
         'user': FirebaseAuth.instance.currentUser.uid,
         'name': _nameController.text,
+        'description': _descriptionController.text,
         'imageUrl': downloadUrl,
         'location_lat': _selectedLocation.latitude,
         'location_lng': _selectedLocation.longitude,
@@ -88,7 +89,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                     decoration: InputDecoration(
                       hintText: "Item Name",
                       hintStyle: TextStyle(fontSize: 14),
-                      border: OutlineInputBorder(), // <-- This is the key
+                      border: OutlineInputBorder(),
                       labelText: "Item Name",
                     ),
                     controller: _nameController,

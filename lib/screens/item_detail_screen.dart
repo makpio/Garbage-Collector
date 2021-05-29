@@ -166,6 +166,29 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           ),
                     alignment: Alignment.center,
                   ),
+                  widget.item['description'] != null
+                      ? Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 5, color: Colors.white),
+                          ),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Flexible(
+                                    child: SingleChildScrollView(
+                                  child: Text(
+                                    widget.item['description'].toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue,
+                                    ),
+                                    //overflow: TextOverflow.ellipsis,
+                                  ),
+                                ))
+                              ]))
+                      : SizedBox(),
                   Container(
                     width: double.infinity,
                     height: 50,
