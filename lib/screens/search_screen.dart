@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garbage_collector/screens/item_detail_screen.dart';
 import 'package:garbage_collector/screens/search_advanced_screen.dart';
+import 'dart:math';
+import 'add_item_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = '/search';
@@ -13,12 +15,63 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
-  
-  void _advancedSearch() async {
-    final advancedSearchParams =
-        await Navigator.of(context).pushNamed(AdvancedSearchScreen.routeName);
+  AdvancedSearchParams advancedSearchParams;
+  bool isAdvancedMode = false;
 
-    setState(() {});
+  void _advancedSearch() async {
+    final newSearchParams = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AdvancedSearchScreen(
+          onSelectAdvancedParams: null,
+          initParams: advancedSearchParams,
+        ),
+      ),
+    );
+
+    setState(() {
+      advancedSearchParams = newSearchParams;
+      if (advancedSearchParams.location != null) {
+        isAdvancedMode = true;
+      }
+      if (isAdvancedMode) print('is adsv');
+    });
+    if (advancedSearchParams.range != null)
+      print(advancedSearchParams.range.toString());
+    if (advancedSearchParams.location != null &&
+        advancedSearchParams.location.latitude != null) {
+      print(advancedSearchParams.location.latitude.toString());
+    }
+  }
+
+  double getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(deg2rad(lat1)) * cos(deg2rad(lat2)) * sin(dLon / 2) * sin(dLon / 2);
+    var c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  }
+
+  double deg2rad(deg) {
+    return deg * (pi / 180);
+  }
+
+  bool isInRange(double lng, double lat) {
+    print('IS IN RANGE');
+    print(lat);
+    double distance = getDistanceFromLatLonInKm(
+        lat,
+        lng,
+        advancedSearchParams.location.latitude,
+        advancedSearchParams.location.longitude);
+    print(distance);
+    if (distance <= advancedSearchParams.range)
+      return true;
+    else
+      return false;
   }
 
   @override
@@ -36,6 +89,8 @@ class _SearchScreenState extends State<SearchScreen> {
             onPressed: () {
               setState(() {
                 _searchController.text = '';
+                advancedSearchParams = AdvancedSearchParams(null, null);
+                isAdvancedMode = false;
                 //TO DO refresh all parameters
               });
               //TO DO refresh all parameters
@@ -50,6 +105,9 @@ class _SearchScreenState extends State<SearchScreen> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextFormField(
+              inputFormatters: [
+                UpperCaseTextFormatter(),
+              ],
               controller: _searchController,
               onChanged: (text) => {setState(() {})},
               style: TextStyle(fontSize: 20),
@@ -65,9 +123,11 @@ class _SearchScreenState extends State<SearchScreen> {
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('items')
-                      .where('name'.toLowerCase(),
-                          isGreaterThanOrEqualTo:
-                              _searchController.text.toLowerCase())
+                      .where('name',
+                          isGreaterThanOrEqualTo: _searchController.text)
+                      .where('name',
+                          isLessThanOrEqualTo:
+                              _searchController.text + '\uf8ff')
                       .snapshots(),
                   builder: (ctx, snapshot) {
                     if (snapshot.data == null)
@@ -85,9 +145,26 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         ],
                       );
-                    return ListView.builder(
+                    return ListView.separated(
                         itemCount: snapshot.data.docs.length,
-                        itemBuilder: (ctx, index) => ListTile(
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        },
+                        itemBuilder: (ctx, index) {
+                          if (_searchController.text.isEmpty ||
+                              !isAdvancedMode ||
+                              (snapshot.data.docs[index]
+                                          .data()['location_lng'] !=
+                                      null &&
+                                  snapshot.data.docs[index]
+                                          .data()['location_lat'] !=
+                                      null &&
+                                  isInRange(
+                                      snapshot.data.docs[index]
+                                          .data()['location_lng'],
+                                      snapshot.data.docs[index]
+                                          .data()['location_lat']))) {
+                            return ListTile(
                               leading: (snapshot.data.docs[index]
                                           .data()['imageUrl'] !=
                                       null)
@@ -119,7 +196,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                 );
                               },
-                            ));
+                            );
+                          } else {
+                            return null;
+                          }
+                        });
                   })),
           Padding(
             padding: const EdgeInsets.all(10),
