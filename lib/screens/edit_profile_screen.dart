@@ -25,7 +25,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
   Image _initImage;
   File _selectedImage;
 
@@ -108,10 +107,24 @@ class _EditUserScreenState extends State<EditUserScreen> {
             ));
   }
 
+  void _showToast(BuildContext context, String text) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(text),
+        action: SnackBarAction(
+            label: 'UNDO', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
   void _editUser() async {
-    // if (this._nameController.text.isEmpty) {
-    //   return;
-    // }
+    bool isSuccess;
+    if (this._nameController.text.isEmpty) {
+      _showToast(context, 'User name cannot be empty!');
+      return;
+    }
 
     String downloadUrl;
     if (_selectedImage != null) {
@@ -125,43 +138,50 @@ class _EditUserScreenState extends State<EditUserScreen> {
       downloadUrl = widget.user['imageUrl'];
     }
 
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.userId)
-          .update({
-        'username': _nameController.text,
-        'email': _emailController.text,
-        'phoneNo': _phoneController.text,
-        'imageUrl': downloadUrl,
-      });
-
+    if (_emailController.text != widget.user['email']) {
       var firebaseUser = FirebaseAuth.instance.currentUser;
-      firebaseUser
-          .updateEmail(_emailController.text)
-          .then((val) {})
-          .catchError((err) {
-        // An error has occured.
-      });
+      await firebaseUser.updateEmail(_emailController.text).then((val) async {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userId)
+            .update({
+          'email': _emailController.text,
+        });
+      }).catchError((err) async {
+        var message = 'An error occured during editing user email';
+        print(err.message);
+        if (err.message != null) {
+          message = err.message;
+        }
 
-      firebaseUser.updatePassword('test6969').then((val) {}).catchError((err) {
-        // An error has occured.
+        isSuccess = false;
+        print('xd1');
+        _showToast(context, message);
+        return;
       });
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-    } catch (err) {
-      var message = 'An error occured during editing user profile';
+    }
 
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userId)
+        .update({
+      'username': _nameController.text,
+      'phoneNo': _phoneController.text,
+      'imageUrl': downloadUrl,
+    }).catchError((err) async {
+      var message = 'An error occured during updating user profile';
+      print(err.message);
       if (err.message != null) {
         message = err.message;
       }
+      isSuccess = false;
+      _showToast(context, message);
+      return;
+    });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Theme.of(context).errorColor,
-        ),
-      );
+    if (isSuccess != false) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
     }
   }
 
@@ -230,19 +250,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
                       hintStyle: TextStyle(fontSize: 14),
                       border: OutlineInputBorder(),
                       labelText: "Phone",
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    controller: _passwordController,
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      hintStyle: TextStyle(fontSize: 14),
-                      border: OutlineInputBorder(),
-                      labelText: "Password",
                     ),
                   ),
                   SizedBox(

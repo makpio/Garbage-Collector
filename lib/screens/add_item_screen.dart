@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:garbage_collector/widgets/location_input.dart';
 import '../widgets/image_input.dart';
@@ -31,10 +32,28 @@ class _AddItemScreenState extends State<AddItemScreen> {
     _selectedLocation = selectedLocation;
   }
 
+  void _showToast(BuildContext context, String text) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(text),
+        action: SnackBarAction(
+            label: 'UNDO', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
   void _saveItem() async {
-    if (_nameController.text.isEmpty || _selectedImage == null) {
+    if (_nameController.text.isEmpty) {
+      _showToast(context, "Item name can not be empty!");
       return;
     }
+    if (_selectedImage == null) {
+      _showToast(context, "Item photo can not be empty!");
+      return;
+    }
+
     try {
       String fileName = path.basename(_selectedImage.path);
       Reference firebaseStorageRef =
@@ -55,16 +74,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
     } catch (err) {
       var message = 'An error occured during adding new item';
 
-      if (err.message != null) {
-        message = err.message;
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Theme.of(context).errorColor,
-        ),
-      );
+      _showToast(context, message);
     }
   }
 
@@ -85,6 +95,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                    inputFormatters: [
+                      UpperCaseTextFormatter(),
+                    ],
                     style: TextStyle(fontSize: 24),
                     decoration: InputDecoration(
                       hintText: "Item Name",
@@ -137,6 +150,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text?.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

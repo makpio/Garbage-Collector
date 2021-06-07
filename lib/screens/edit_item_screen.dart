@@ -7,6 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:latlong/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'add_item_screen.dart';
 
 class EditItemScreen extends StatefulWidget {
   //static const routeName = '/edit-item';
@@ -113,8 +114,21 @@ class _EditItemScreenState extends State<EditItemScreen> {
     );
   }
 
+  void _showToast(BuildContext context, String text) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(text),
+        action: SnackBarAction(
+            label: 'UNDO', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
   void _editItem() async {
-    if (this._nameController.text.isEmpty) {
+    if (_nameController.text.isEmpty) {
+      _showToast(context, "Name can not be empty!");
       return;
     }
 
@@ -131,6 +145,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
     }
 
     if (_selectedLocation == null) {
+      print('xd');
       _selectedLocation = _initLocation;
     }
 
@@ -154,13 +169,7 @@ class _EditItemScreenState extends State<EditItemScreen> {
       if (err.message != null) {
         message = err.message;
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Theme.of(context).errorColor,
-        ),
-      );
+      _showToast(context, message);
     }
   }
 
@@ -191,6 +200,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                    inputFormatters: [
+                      UpperCaseTextFormatter(),
+                    ],
                     controller: _nameController,
                     onChanged: (text) => {},
                     style: TextStyle(fontSize: 20),
