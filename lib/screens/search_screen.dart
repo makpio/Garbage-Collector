@@ -28,20 +28,13 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
     );
-
     setState(() {
       advancedSearchParams = newSearchParams;
-      if (advancedSearchParams.location != null) {
+      if (advancedSearchParams.location != null &&
+          advancedSearchParams.range != null) {
         isAdvancedMode = true;
       }
-      if (isAdvancedMode) print('is adsv');
     });
-    if (advancedSearchParams.range != null)
-      print(advancedSearchParams.range.toString());
-    if (advancedSearchParams.location != null &&
-        advancedSearchParams.location.latitude != null) {
-      print(advancedSearchParams.location.latitude.toString());
-    }
   }
 
   double getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -145,14 +138,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           ),
                         ],
                       );
-                    return ListView.separated(
+                    return ListView.builder(
                         itemCount: snapshot.data.docs.length,
-                        separatorBuilder: (context, index) {
-                          return Divider();
-                        },
+                        //separatorBuilder: (context, index) {
+                        //   return Divider();
+                        //},
                         itemBuilder: (ctx, index) {
-                          if (_searchController.text.isEmpty ||
-                              !isAdvancedMode ||
+                          if ((!isAdvancedMode ||
+                                  advancedSearchParams.range == 10) ||
                               (snapshot.data.docs[index]
                                           .data()['location_lng'] !=
                                       null &&
@@ -198,7 +191,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               },
                             );
                           } else {
-                            return null;
+                            return Visibility(
+                                visible: false, child: Container());
                           }
                         });
                   })),
