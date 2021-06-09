@@ -165,10 +165,6 @@ class _EditItemScreenState extends State<EditItemScreen> {
       Navigator.of(context).pop();
     } catch (err) {
       var message = 'An error occured during editing item';
-
-      if (err.message != null) {
-        message = err.message;
-      }
       _showToast(context, message);
     }
   }

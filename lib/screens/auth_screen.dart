@@ -44,8 +44,6 @@ class _AuthScreenState extends State<AuthScreen> {
         _isLoading = false;
       });
 
-      // Navigator.pushReplacement(context,
-      //     new MaterialPageRoute(builder: (context) => new UserItemsList()));
     } catch (err) {
       var message = 'An error occured. Please check your credentials!';
 

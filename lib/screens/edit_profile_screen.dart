@@ -149,13 +149,8 @@ class _EditUserScreenState extends State<EditUserScreen> {
         });
       }).catchError((err) async {
         var message = 'An error occured during editing user email';
-        print(err.message);
-        if (err.message != null) {
-          message = err.message;
-        }
-
+       
         isSuccess = false;
-        print('xd1');
         _showToast(context, message);
         return;
       });
@@ -170,10 +165,7 @@ class _EditUserScreenState extends State<EditUserScreen> {
       'imageUrl': downloadUrl,
     }).catchError((err) async {
       var message = 'An error occured during updating user profile';
-      print(err.message);
-      if (err.message != null) {
-        message = err.message;
-      }
+      
       isSuccess = false;
       _showToast(context, message);
       return;
